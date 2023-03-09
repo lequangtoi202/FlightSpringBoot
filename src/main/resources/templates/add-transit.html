@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head th:replace="fragments :: header">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul th:replace="fragments :: sidebar">
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav th:replace="fragments :: topbar"></nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                        <form class="form-horizontal" th:action="@{/save-transit}" method="POST" th:object="${transitDto}">
+                        <fieldset>
+                            <!-- Form Name -->
+                            <legend>ADD TRANSIT</legend>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="stop_minutes">Stop minutes</label>
+                                <div class="col-md-4">
+                                    <input id="stop_minutes" th:field="*{stop_minutes}" name="stop_minutes"  class="form-control input-md" required="" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="note">Note</label>
+                                <div class="col-md-4">
+                                    <input id="note" th:field="*{note}" name="note"  class="form-control input-md" type="text">
+                                </div>
+                            </div>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="airport">Airport name</label>
+                                <div class="col-md-4">
+                                    <select id="airport" th:field="*{airport}" name="airport" class="form-control">
+                                        <option th:value="null">--SELECT--</option>
+                                        <option th:each="airport : ${airports}"
+                                                th:value="${airport.id}"
+                                                th:text="${airport.name}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="airRoute">Air route name</label>
+                                <div class="col-md-4">
+                                    <select id="airRoute" th:field="*{airRoute}" name="airRoute" class="form-control">
+                                        <option th:value="null">--SELECT--</option>
+                                        <option th:each="airRoute : ${airRoutes}"
+                                                th:value="${airRoute.id}"
+                                                th:text="${airRoute.name}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+
+                </div>
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer th:replace="fragments :: footer">
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a th:replace="fragments :: scroll"></a>
+
+    <!-- Logout Modal-->
+    <div th:replace="fragments :: logoutModal"></div>
+
+
+
+    <!--end-->
+    <div th:replace="fragments :: script"></div>
+    <script th:src="@{/js/categories.js}"></script>
+
+</body>
+
+</html>
