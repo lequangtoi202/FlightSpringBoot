@@ -74,7 +74,7 @@
                                     <li><a th:href="@{#about}">About</a></li>
                                     <li><a th:href="@{/booked/list}">Booked ticket</a></li>
                                     <li><a th:href="@{#contact}">Contact Us</a></li>
-                                    <li><a th:text="${session.username != null} ? ${session.username} : 'Authentication'" style="color: #fff;"></span></li>
+                                    <li><a th:text="${session.username != null} ? ${session.username} : 'Authentication'" style="color: #fff;"></a></li>
                                     <li><a th:if="${session.username == null}" href="http://localhost:8099/login">Sign In</a></li>
                                     <li><a th:if="${session.username != null}" href="http://localhost:8099/login?logout">Log out</a></li>
                                     <li><a href="http://localhost:8099/register">Sign Up</a></li>
@@ -179,7 +179,10 @@
                 </div>
             </th:block>
             <h2>Thành tiền: <span th:text="${totalCost} + '$'"></span></h2>
-            <button class="btn btn-primary" type="submit" style="margin-top: 3%">Đặt vé</button>
+            <div class="text-center">
+                <button class="btn" type="submit" style="margin-top: 3%; background-color: #ee580f; color: #fff">Đặt vé</button>
+            </div>
+
         </form>
     </div>
 

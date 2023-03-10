@@ -132,44 +132,63 @@ public class CustomerController {
         Flight flight = flightService.findById(id);
         if (AFname != null) {
             for (int i = 0; i < AFname.length; i++) {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setUser(user);
-                customerDto.setAddress(null);
-                customerDto.setDob(formatter.parse(ADOB[i]));
-                customerDto.setPhoneNum(APhone[i]);
-                customerDto.setFirstName(AFname[i]);
-                customerDto.setLastName(ALname[i]);
-                Customer customer = customerService.save(customerDto);
-                IdPaperDto idPaperDto = new IdPaperDto();
-                idPaperDto.setPaper_type(paperType[i]);
-                idPaperDto.setCode(APaper[i]);
-                idPaperDto.setCustomer(customer);
-                idPaperService.save(idPaperDto);
-                int qty = flightService.getRemainingSeat(id, seat_class);
-                Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
-                Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
+                Customer customerSaved = customerService.getCustomerByCodePaper(APaper[i]);
+                if (customerSaved == null){
+                    CustomerDto customerDto = new CustomerDto();
+                    customerDto.setUser(user);
+                    customerDto.setAddress(null);
+                    customerDto.setDob(formatter.parse(ADOB[i]));
+                    customerDto.setPhoneNum(APhone[i]);
+                    customerDto.setFirstName(AFname[i]);
+                    customerDto.setLastName(ALname[i]);
+                    Customer customer = customerService.save(customerDto);
+                    IdPaperDto idPaperDto = new IdPaperDto();
+                    idPaperDto.setPaper_type(paperType[i]);
+                    idPaperDto.setCode(APaper[i]);
+                    idPaperDto.setCustomer(customer);
+                    idPaperService.save(idPaperDto);
+                    int qty = flightService.getRemainingSeat(id, seat_class);
+                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                    Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
+                }else{
+                    IdPaperDto idPaperDto = idPaperService.getIdPaperByCustomerId(customerSaved.getId());
+                    idPaperService.update(idPaperDto);
+                    int qty = flightService.getRemainingSeat(id, seat_class);
+                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                    Ticket ticket = ticketService.createTicket(user, customerSaved, seat_class, flight, seat);
+                }
+
             }
             Schedule schedule = scheduleService.updateNumOfSeat(seat_class, AFname.length, id);
         }
 
         if (CFname != null) {
             for (int i = 0; i < CFname.length; i++) {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setUser(user);
-                customerDto.setAddress(null);
-                customerDto.setDob(formatter.parse(CDOB[i]));
-                customerDto.setPhoneNum(CPhone[i]);
-                customerDto.setFirstName(CFname[i]);
-                customerDto.setLastName(CLname[i]);
-                Customer customer = customerService.save(customerDto);
-                IdPaperDto idPaperDto = new IdPaperDto();
-                idPaperDto.setPaper_type("1");
-                idPaperDto.setCode(CPP[i]);
-                idPaperDto.setCustomer(customer);
-                idPaperService.save(idPaperDto);
-                int qty = flightService.getRemainingSeat(id, seat_class);
-                Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
-                Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
+                Customer customerSaved = customerService.getCustomerByCodePaper(CPP[i]);
+                if (customerSaved == null) {
+                    CustomerDto customerDto = new CustomerDto();
+                    customerDto.setUser(user);
+                    customerDto.setAddress(null);
+                    customerDto.setDob(formatter.parse(CDOB[i]));
+                    customerDto.setPhoneNum(CPhone[i]);
+                    customerDto.setFirstName(CFname[i]);
+                    customerDto.setLastName(CLname[i]);
+                    Customer customer = customerService.save(customerDto);
+                    IdPaperDto idPaperDto = new IdPaperDto();
+                    idPaperDto.setPaper_type("1");
+                    idPaperDto.setCode(CPP[i]);
+                    idPaperDto.setCustomer(customer);
+                    idPaperService.save(idPaperDto);
+                    int qty = flightService.getRemainingSeat(id, seat_class);
+                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                    Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
+                }else{
+                    IdPaperDto idPaperDto = idPaperService.getIdPaperByCustomerId(customerSaved.getId());
+                    idPaperService.update(idPaperDto);
+                    int qty = flightService.getRemainingSeat(id, seat_class);
+                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                    Ticket ticket = ticketService.createTicket(user, customerSaved, seat_class, flight, seat);
+                }
             }
             Schedule schedule = scheduleService.updateNumOfSeat(seat_class, CFname.length, id);
         }
