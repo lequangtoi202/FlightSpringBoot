@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/FlightSpringBoot.iml" filepath="$PROJECT_DIR$/.idea/FlightSpringBoot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flight-spring-boot-project.iml" filepath="$PROJECT_DIR$/flight-spring-boot-project.iml" />
     </modules>
   </component>
 </project>

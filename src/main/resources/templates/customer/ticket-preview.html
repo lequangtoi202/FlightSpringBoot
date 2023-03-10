@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Effort Flight</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- style css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Responsive-->
+    <link rel="stylesheet" th:href="@{/css/responsive.css}">
+    <!-- fevicon -->
+    <link rel="icon" th:href="@{/images/fevicon.png}" type="image/gif"/>
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/jquery.mCustomScrollbar.min.css}">
+    <!-- Tweaks for older IEs-->
+    <!-- owl stylesheets -->
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/css/owl.theme.default.min.css}">
+
+    <link rel="stylesheet" th:href="@{/css/previewTicket.css}">
+    <script src="https://kit.fontawesome.com/18bf94df79.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/js/tempus-dominus.js"
+            crossorigin="anonymous"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</head>
+<!-- body -->
+<body class="main-layout" style="background-color: #e8ebee">
+<!-- loader  -->
+<div class="loader_bg">
+    <div class="loader"><img th:src="@{/images/loading.gif}" alt="#" /></div>
+</div>
+<!-- end loader -->
+<!-- header -->
+<header>
+    <!-- header inner -->
+    <div class="header">
+        <div class="header_white_section">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="header_information">
+                            <ul>
+                                <li><img th:src="@{/images/1.png}" alt="#"/> 371 Nguyen Kiem, Go Vap district</li>
+                                <li><img th:src="@{/images/2.png}" alt="#"/> +84 868832530</li>
+                                <li><img th:src="@{/images/3.png}" alt="#"/> toiquangle@gmail.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
+                    <div class="full">
+                        <div class="center-desk">
+                            <div class="logo"><a th:href="@{/}"><img th:src="@{/images/logo.png}" alt="#"></a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
+                    <div class="menu-area">
+                        <div class="limit-box">
+                            <nav class="main-menu">
+                                <ul class="menu-area-main">
+                                    <li class="active"><a th:href="@{/}">Home</a></li>
+                                    <li><a th:href="@{#about}">About</a></li>
+                                    <li><a th:href="@{/booked/list}">Booked ticket</a></li>
+                                    <li><a th:href="@{#contact}">Contact Us</a></li>
+                                    <li><a th:text="${session.username != null} ? ${session.username} : 'Authentication'" style="color: #fff;"></a></li>
+                                    <li><a th:if="${session.username == null}" href="http://localhost:8099/login">Sign In</a></li>
+                                    <li><a th:if="${session.username != null}" href="http://localhost:8099/login?logout">Log out</a></li>
+                                    <li><a href="http://localhost:8099/register">Sign Up</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end header inner -->
+</header>
+<!-- traveling -->
+<div class="container">
+    <form method="post">
+        <div class="container" style="margin-top:2%">
+            <div class="container1">
+                <div class="ticket basic">
+                    <p>Admit One</p>
+                </div>
+                <div class="ticket airline">
+                    <div class="top">
+                        <h1 class="title-ticket">boarding pass</h1>
+                        <div class="big">
+                            <div class="from">Effort</div>
+                            <p class="to mt-2">Airline</p>
+                        </div>
+                        <div class="top--side">
+                            <i class="fas fa-plane"></i>
+                            <!--                    <p>{{t.flight.airroute.departure}}</p>-->
+                            <!--                    <p>{{t.flight.airroute.destination}}</p>-->
+                        </div>
+                    </div>
+                    <div class="bottom1">
+                        <div class="column1">
+                            <div class="row1 row-1a">
+                                <p><span>Flight</span><span class="text-gray" th:text="${ticket.flight.id}"></span></p>
+                                <p class="row1--right1"><span>Ticket code:</span><span class="text-gray" th:text="${ticket.id}"></span></p>
+                            </div>
+                            <div class="row1 row-1a">
+                                <p><span>Boards</span><span class="text-gray" th:text="${schedule.date}"></span></p>
+                                <p class="row1--center1"><span>Departs</span><span class="text-gray" th:text="${ticket.flight.airRoute.departure.location}"></span></p>
+                                <p class="row1--right1"><span>Arrives</span><span class="text-gray" th:text="${ticket.flight.airRoute.destination.location}"></span></p>
+                            </div>
+                            <div class="row1 row-1a">
+                                <p><span>Passenger</span><span class="text-gray" th:text="${ticket.customer.lastName}"></span><span class="text-gray" th:text="${ticket.customer.firstName}"></span></p>
+                                <p class="row--center"><span>Seat</span><span class="text-gray" th:text="${ticket.seat.seatName}"></span></p>
+                                <p class="row--right"><span>Seat class</span><span class="text-gray" th:text="${ticket.seat_class}"></span></p>
+                            </div>
+                        </div>
+                        <div class="bar--code"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- partial -->
+    </form>
+</div>
+
+<!-- end traveling -->
+<!-- footer -->
+<footer>
+    <div id="contact" class="footer">
+        <div class="container">
+            <div class="row pdn-top-30">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <ul class="location_icon">
+                        <li><a th:href="@{#}"><img th:src="@{/icon/facebook.png}"></a></li>
+                        <li><a th:href="@{#}"><img th:src="@{/icon/Twitter.png}"></a></li>
+                        <li><a th:href="@{#}"><img th:src="@{/icon/linkedin.png}"></a></li>
+                        <li><a th:href="@{#}"><img th:src="@{/icon/instagram.png}"></a></li>
+                    </ul>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                    <div class="Follow">
+                        <h3>CONTACT US</h3>
+                        <span>123 Second Street Fifth <br>Avenue,<br>
+                        Manhattan, New York<br>
+                        +987 654 3210</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                    <div class="Follow">
+                        <h3>ADDITIONAL LINKS</h3>
+                        <ul class="link">
+                            <li><a th:href="@{#}">About us</a></li>
+                            <li><a th:href="@{#}">Terms and conditions</a></li>
+                            <li><a th:href="@{#}"> Privacy policy</a></li>
+                            <li><a th:href="@{#}">News</a></li>
+                            <li><a th:href="@{#}"> Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <div class="Follow">
+                        <h3> Contact</h3>
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <input class="Newsletter" placeholder="Name" type="text">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <input class="Newsletter" placeholder="Email" type="text">
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <textarea class="textarea" placeholder="comment" type="text">Comment</textarea>
+                            </div>
+                        </div>
+                        <button class="Subscribe">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="container">
+                    <p>Copyright 2019 All Right Reserved By <a href="https://html.design/">Free html Templates</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- end footer -->
+<!-- Javascript files-->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/jquery-3.0.0.min.js}"></script>
+<script th:src="@{/js/plugin.js}"></script>
+<!-- sidebar -->
+<script th:src="@{/js/jquery.mCustomScrollbar.concat.min.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+<script th:src="@{/js/seat.js}"></script>
+<!-- javascript -->
+<script th:src="@{/js/owl.carousel.js}"></script>
+<script>
+    $(document).ready(function () {
+        var owl = $('.owl-carousel');
+        owl.owlCarousel({
+            margin: 10,
+            nav: true,
+            loop: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 2
+                },
+                1000: {
+                    items: 3
+                }
+            }
+        })
+    })
+</script>
+
+</body>
+</html>
