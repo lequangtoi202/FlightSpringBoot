@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -83,11 +86,11 @@ public class CustomerController {
                            @RequestParam("adult") int adult,
                            @RequestParam("child") int child,
                            Model model,
-                           Principal principal) {
+                           Principal principal, HttpSession session) {
         if (principal == null) {
             return "redirect:/login";
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         double price = 0.0;
         double totalCost = 0.0;
         FlightResponse flightResponse = flightService.getFlightByIdAndIsActivated(id);
@@ -97,6 +100,7 @@ public class CustomerController {
             price = flightResponse.getTicketPrice().getS_price();
         }
         totalCost = (adult + child) * price;
+        session.setAttribute("total", totalCost);
         model.addAttribute("totalCost", totalCost);
         model.addAttribute("price", price);
         model.addAttribute("adult", adult);
@@ -107,6 +111,7 @@ public class CustomerController {
     }
 
     @GetMapping("/flight-detail/{id}/ticket/{seat_class}")
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
     public String ticket(@PathVariable("id") Long id, @PathVariable("seat_class") int seat_class,
                          @RequestParam(value = "AFname", required = false) String[] AFname,
                          @RequestParam(value = "ALname", required = false) String[] ALname,
@@ -120,80 +125,82 @@ public class CustomerController {
                          @RequestParam(value = "CPhone", required = false) String[] CPhone,
                          @RequestParam(value = "CPP", required = false) String[] CPP,
                          Model model,
-                         RedirectAttributes attributes,
-                         Principal principal) throws ParseException {
+                         Principal principal) throws ParseException, Exception {
         if (principal == null) {
             return "redirect:/login";
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userService.findByUsername(authentication.getName());//id
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Flight flight = flightService.findById(id);
-        if (AFname != null) {
-            for (int i = 0; i < AFname.length; i++) {
-                Customer customerSaved = customerService.getCustomerByCodePaper(APaper[i]);
-                if (customerSaved == null){
-                    CustomerDto customerDto = new CustomerDto();
-                    customerDto.setUser(user);
-                    customerDto.setAddress(null);
-                    customerDto.setDob(formatter.parse(ADOB[i]));
-                    customerDto.setPhoneNum(APhone[i]);
-                    customerDto.setFirstName(AFname[i]);
-                    customerDto.setLastName(ALname[i]);
-                    Customer customer = customerService.save(customerDto);
-                    IdPaperDto idPaperDto = new IdPaperDto();
-                    idPaperDto.setPaper_type(paperType[i]);
-                    idPaperDto.setCode(APaper[i]);
-                    idPaperDto.setCustomer(customer);
-                    idPaperService.save(idPaperDto);
-                    int qty = flightService.getRemainingSeat(id, seat_class);
-                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
-                    Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
-                }else{
-                    IdPaperDto idPaperDto = idPaperService.getIdPaperByCustomerId(customerSaved.getId());
-                    idPaperService.update(idPaperDto);
-                    int qty = flightService.getRemainingSeat(id, seat_class);
-                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
-                    Ticket ticket = ticketService.createTicket(user, customerSaved, seat_class, flight, seat);
+            User user = userService.findByUsername(authentication.getName());//id
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Flight flight = flightService.findById(id);
+            if (AFname != null) {
+                for (int i = 0; i < AFname.length; i++) {
+                    Customer customerSaved = customerService.getCustomerByCodePaper(APaper[i]);
+                    if (customerSaved == null){
+                        CustomerDto customerDto = new CustomerDto();
+                        customerDto.setUser(user);
+                        customerDto.setAddress(null);
+                        customerDto.setDob(formatter.parse(ADOB[i]));
+                        customerDto.setPhoneNum(APhone[i]);
+                        customerDto.setFirstName(AFname[i]);
+                        customerDto.setLastName(ALname[i]);
+                        Customer customer = customerService.save(customerDto);
+                        IdPaperDto idPaperDto = new IdPaperDto();
+                        idPaperDto.setPaper_type(paperType[i]);
+                        idPaperDto.setCode(APaper[i]);
+                        idPaperDto.setCustomer(customer);
+                        idPaperService.save(idPaperDto);
+                        int qty = flightService.getRemainingSeat(id, seat_class);
+                        Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                        Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
+                    }else{
+                        IdPaperDto idPaperDto = idPaperService.getIdPaperByCustomerId(customerSaved.getId());
+                        idPaperService.update(idPaperDto);
+                        int qty = flightService.getRemainingSeat(id, seat_class);
+                        Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                        Ticket ticket = ticketService.createTicket(user, customerSaved, seat_class, flight, seat);
+                    }
+
                 }
-
+                Schedule schedule = scheduleService.updateNumOfSeat(seat_class, AFname.length, id);
             }
-            Schedule schedule = scheduleService.updateNumOfSeat(seat_class, AFname.length, id);
-        }
 
-        if (CFname != null) {
-            for (int i = 0; i < CFname.length; i++) {
-                Customer customerSaved = customerService.getCustomerByCodePaper(CPP[i]);
-                if (customerSaved == null) {
-                    CustomerDto customerDto = new CustomerDto();
-                    customerDto.setUser(user);
-                    customerDto.setAddress(null);
-                    customerDto.setDob(formatter.parse(CDOB[i]));
-                    customerDto.setPhoneNum(CPhone[i]);
-                    customerDto.setFirstName(CFname[i]);
-                    customerDto.setLastName(CLname[i]);
-                    Customer customer = customerService.save(customerDto);
-                    IdPaperDto idPaperDto = new IdPaperDto();
-                    idPaperDto.setPaper_type("1");
-                    idPaperDto.setCode(CPP[i]);
-                    idPaperDto.setCustomer(customer);
-                    idPaperService.save(idPaperDto);
-                    int qty = flightService.getRemainingSeat(id, seat_class);
-                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
-                    Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
-                }else{
-                    IdPaperDto idPaperDto = idPaperService.getIdPaperByCustomerId(customerSaved.getId());
-                    idPaperService.update(idPaperDto);
-                    int qty = flightService.getRemainingSeat(id, seat_class);
-                    Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
-                    Ticket ticket = ticketService.createTicket(user, customerSaved, seat_class, flight, seat);
+            if (CFname != null) {
+                for (int i = 0; i < CFname.length; i++) {
+                    Customer customerSaved = customerService.getCustomerByCodePaper(CPP[i]);
+                    if (customerSaved == null) {
+                        CustomerDto customerDto = new CustomerDto();
+                        customerDto.setUser(user);
+                        customerDto.setAddress(null);
+                        customerDto.setDob(formatter.parse(CDOB[i]));
+                        customerDto.setPhoneNum(CPhone[i]);
+                        customerDto.setFirstName(CFname[i]);
+                        customerDto.setLastName(CLname[i]);
+                        Customer customer = customerService.save(customerDto);
+                        IdPaperDto idPaperDto = new IdPaperDto();
+                        idPaperDto.setPaper_type("1");
+                        idPaperDto.setCode(CPP[i]);
+                        idPaperDto.setCustomer(customer);
+                        idPaperService.save(idPaperDto);
+                        int qty = flightService.getRemainingSeat(id, seat_class);
+                        Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                        Ticket ticket = ticketService.createTicket(user, customer, seat_class, flight, seat);
+                    }else{
+                        IdPaperDto idPaperDto = idPaperService.getIdPaperByCustomerId(customerSaved.getId());
+                        idPaperService.update(idPaperDto);
+                        int qty = flightService.getRemainingSeat(id, seat_class);
+                        Seat seat = seatService.getSeatBySeatClassAndFlightIdAndSeatTemp(seat_class, (long) qty - i, id);
+                        Ticket ticket = ticketService.createTicket(user, customerSaved, seat_class, flight, seat);
+                    }
                 }
+                Schedule schedule = scheduleService.updateNumOfSeat(seat_class, CFname.length, id);
             }
-            Schedule schedule = scheduleService.updateNumOfSeat(seat_class, CFname.length, id);
+            return "redirect:/payment";
+        }catch(Exception e){
+            throw new Exception("Lỗi");
         }
-        attributes.addFlashAttribute("success", "Đặt vé thành công");
-        return "redirect:/booked/list";
     }
 
     @GetMapping("/booked/list")

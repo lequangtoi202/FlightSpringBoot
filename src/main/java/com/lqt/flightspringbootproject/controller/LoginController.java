@@ -98,7 +98,7 @@ public class LoginController {
     }
 
     @GetMapping("/")
-    public String home(Model model, HttpSession session, Principal principal){
+    public String home(Model model, HttpSession session, Principal principal, HttpServletRequest request){
         model.addAttribute("title", "Home Page");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken){
@@ -107,7 +107,9 @@ public class LoginController {
 
         if (authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
-            session.setAttribute("adminName", principal.getName());
+            HttpSession session1 = request.getSession();
+            String userAdmin = (String) session.getAttribute("userAdmin");
+
             return "redirect:/admin";
         }
         session.setAttribute("username", principal.getName());

@@ -93,10 +93,7 @@
     <div class="form-container">
         <form method="get" accept-charset="utf-8" th:action="@{/flight-detail/{id}/ticket/{seat_class} (id=${id}, seat_class=${seat_class})}">
             <h2 class="form-title">Hạng <span th:text="${seat_class}"></span> người lớn: <span th:text="${adult}"></span> vé</h2>
-            <th:block th:if="${adult != 0}" th:each="i: ${adult}">
-                <div  class="form-header">
-                    <h2 class="header-text">Người lớn <span th:text="${i}"></span></h2>
-                </div>
+
                 <div class="plus">
                     <h3> Thông tin vé</h3>
                     <div class="input-group mb-2">
@@ -114,6 +111,12 @@
                                disabled>
                         <input th:if="${seat_class == 2}" type="text" class="form-control"  th:value="${flight.ticketPrice.s_price}"
                                disabled>
+                    </div>
+                </div>
+                <div th:if="${adult != 0}" th:each="i: ${#numbers.sequence(1, adult)}">
+
+                    <div  class="form-header">
+                        <h2 class="header-text">Người lớn <span th:text="${i}"></span></h2>
                     </div>
                     <h3> Thông tin khách hàng</h3>
                     <div class="input-group mb-2">
@@ -143,11 +146,10 @@
                     </span>
                         <input type="text" class="form-control" name="APaper" required>
                     </div>
-                </div>
-            </th:block>
+            </div>
 
             <h2 class="form-title">Hạng <span th:text="${seat_class}"></span> trẻ em: <span th:text="${child}"></span> vé</h2>
-            <th:block th:if="${child != 0}" th:each="i: ${child}">
+            <div th:if="${child != 0}" th:each="i: ${#numbers.sequence(1, child)}">
                 <div class="form-header">
                     <h2 class="header-text">Trẻ em <span th:text="${i}"></span></h2>
                 </div>
@@ -177,7 +179,7 @@
                         <input type="text" class="form-control" name="CPP">
                     </div>
                 </div>
-            </th:block>
+            </div>
             <h2>Thành tiền: <span th:text="${totalCost} + '$'"></span></h2>
             <div class="text-center">
                 <button class="btn" type="submit" style="margin-top: 3%; background-color: #ee580f; color: #fff">Đặt vé</button>
@@ -196,29 +198,28 @@
             <div class="row pdn-top-30">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <ul class="location_icon">
-                        <li><a th:href="@{#}"><img th:src="@{/icon/facebook.png}"></a></li>
-                        <li><a th:href="@{#}"><img th:src="@{/icon/Twitter.png}"></a></li>
-                        <li><a th:href="@{#}"><img th:src="@{/icon/linkedin.png}"></a></li>
-                        <li><a th:href="@{#}"><img th:src="@{/icon/instagram.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/facebook.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/Twitter.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/linkedin.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/instagram.png}"></a></li>
                     </ul>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                     <div class="Follow">
                         <h3>CONTACT US</h3>
-                        <span>123 Second Street Fifth <br>Avenue,<br>
-                        Manhattan, New York<br>
-                        +987 654 3210</span>
+                        <span>371 Nguyen Kiem, Go Vap district, Ho Chi Minh city <br>
+                        +8468832530</span>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                     <div class="Follow">
                         <h3>ADDITIONAL LINKS</h3>
                         <ul class="link">
-                            <li><a th:href="@{#}">About us</a></li>
-                            <li><a th:href="@{#}">Terms and conditions</a></li>
-                            <li><a th:href="@{#}"> Privacy policy</a></li>
-                            <li><a th:href="@{#}">News</a></li>
-                            <li><a th:href="@{#}"> Contact us</a></li>
+                            <li> <a th:href="@{#}">About us</a></li>
+                            <li> <a th:href="@{#}">Terms and conditions</a></li>
+                            <li> <a th:href="@{#}"> Privacy policy</a></li>
+                            <li> <a th:href="@{#}">News</a></li>
+                            <li> <a th:href="@{#}"> Contact us</a></li>
                         </ul>
                     </div>
                 </div>

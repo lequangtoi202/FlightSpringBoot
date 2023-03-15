@@ -2,12 +2,15 @@ package com.lqt.flightspringbootproject.repository;
 
 import com.lqt.flightspringbootproject.dto.FlightResponse;
 import com.lqt.flightspringbootproject.dto.FlightSeatResponse;
+import com.lqt.flightspringbootproject.dto.StatisticResponse;
 import com.lqt.flightspringbootproject.model.Flight;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.Date;
 import java.util.List;
 
@@ -30,4 +33,11 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     @Query("select f.airplane.Id from Flight f where f.is_deleted = false and f.is_activated = true and f.id = :id")
     Long getAirplaneIdByFlight(@Param("id")Long id);
+
+    @Query(value = "SELECT ar.*,count(t.ticket_id) , (count(t.ticket_id) * tp.f_price )\n" +
+            "FROM flight.air_route ar, flight.flight f, flight.ticket t, flight.ticket_price tp\n" +
+            "where ar.air_route_id = f.air_route_id and f.flight_id = t.flight_id \n" +
+            "and f.ticket_price_id = tp.ticket_price_id and t.seat_class = :seatClass and year(t.sold_time)=:year and month(t.sold_time) = :month\n" +
+            "group by ar.air_route_id, t.flight_id ", nativeQuery = true)
+    List<String> statistic(@Param("seatClass") int seatClass, @Param("year")int year, @Param("month")int month);
 }

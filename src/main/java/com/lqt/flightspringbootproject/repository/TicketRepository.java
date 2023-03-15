@@ -15,4 +15,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("select t from Ticket t where t.user.id = :id order by t.sold_time desc")
     List<Ticket> getAllByBuyerId(@Param("id")Long id);
+
+
 }

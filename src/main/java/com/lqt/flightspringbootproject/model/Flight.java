@@ -21,9 +21,6 @@ public class Flight {
     private List<Ticket> ticket;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "flight")
-    private List<Schedule> schedule;
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ticket_price_id", referencedColumnName = "ticket_price_id")
     private TicketPrice ticketPrice;

@@ -100,7 +100,7 @@
                     </div>
                     <div class="d-flex" style=" align-items: center;justify-content: space-evenly;">
                         <div>
-                            <div th:text="${flight.timeEnd }"></div>
+                            <div th:text="${flight.timeStart }"></div>
                             <div th:text="${flight.airRoute.departure.location }"></div>
                         </div>
                         <div>
@@ -148,19 +148,19 @@
                     <br>
                     <span> Hạng 2 (</span><span th:text="${flight.ticketPrice.s_price} + '$)  '"></span>
                     <input type="radio" id="class2" name="seat_class" value="2"
-                           onchange="">
+                           th:onchange="|setMax(this, ${f_seat}, ${s_seat})|">
                 </div>
                 <div style="">
                     <label for="Adult" style="margin-right: 2%;"> Người lớn: </label>
                     <input style="width: 12%;" type="number" id="Adult" name="adult" step="1" th:max="${f_seat}"
                            min="0" value=0
-                           th:onchange="|changeMaxAdult(${f_seat}, ${s_seat})|"><span th:if="${f_seat == 0}" class="ml-2 text-danger">Hết vé</span><span th:if="${s_seat == 0}" class="ml-2 text-danger">Hết vé</span>
+                           th:onchange="|changeMaxAdult()|"><span th:if="${f_seat == 0}" class="ml-2 text-danger">Hết vé</span><span th:if="${s_seat == 0}" class="ml-2 text-danger">Hết vé</span>
                 </div>
                 <div style="">
                     <label for="Child" style="margin-right: 2%;"> Trẻ em: </label>
                     <input class="ml-4 mt-2" style="width: 12%;" type="number" id="Child" name="child" step="1" th:max="${f_seat}"
                            min="0" value="0"
-                           th:onchange="|changeMaxChild(${f_seat}, ${s_seat})|"><span th:if="${f_seat == 0}" class="ml-2 text-danger">Hết vé</span><span th:if="${s_seat == 0}" class="ml-2 text-danger">Hết vé</span>
+                           th:onchange="|changeMaxChild()|"><span th:if="${f_seat == 0}" class="ml-2 text-danger">Hết vé</span><span th:if="${s_seat == 0}" class="ml-2 text-danger">Hết vé</span>
                 </div>
                 <button class="btn btn-primary" type="submit" style="margin-top: 3%">Tiếp tục đặt chỗ</button>
             </form>
@@ -176,29 +176,28 @@
             <div class="row pdn-top-30">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <ul class="location_icon">
-                        <li><a th:href="@{#}"><img th:src="@{/icon/facebook.png}"></a></li>
-                        <li><a th:href="@{#}"><img th:src="@{/icon/Twitter.png}"></a></li>
-                        <li><a th:href="@{#}"><img th:src="@{/icon/linkedin.png}"></a></li>
-                        <li><a th:href="@{#}"><img th:src="@{/icon/instagram.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/facebook.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/Twitter.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/linkedin.png}"></a></li>
+                        <li> <a th:href="@{#}"><img th:src="@{/icon/instagram.png}"></a></li>
                     </ul>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                     <div class="Follow">
                         <h3>CONTACT US</h3>
-                        <span>123 Second Street Fifth <br>Avenue,<br>
-                        Manhattan, New York<br>
-                        +987 654 3210</span>
+                        <span>371 Nguyen Kiem, Go Vap district, Ho Chi Minh city <br>
+                        +8468832530</span>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                     <div class="Follow">
                         <h3>ADDITIONAL LINKS</h3>
                         <ul class="link">
-                            <li><a th:href="@{#}">About us</a></li>
-                            <li><a th:href="@{#}">Terms and conditions</a></li>
-                            <li><a th:href="@{#}"> Privacy policy</a></li>
-                            <li><a th:href="@{#}">News</a></li>
-                            <li><a th:href="@{#}"> Contact us</a></li>
+                            <li> <a th:href="@{#}">About us</a></li>
+                            <li> <a th:href="@{#}">Terms and conditions</a></li>
+                            <li> <a th:href="@{#}"> Privacy policy</a></li>
+                            <li> <a th:href="@{#}">News</a></li>
+                            <li> <a th:href="@{#}"> Contact us</a></li>
                         </ul>
                     </div>
                 </div>

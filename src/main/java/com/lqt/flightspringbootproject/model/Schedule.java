@@ -26,7 +26,7 @@ public class Schedule {
     private int num_o_F_seat;
     private int num_o_S_seat;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "flight_id", referencedColumnName = "flight_id")
     private Flight flight;
 

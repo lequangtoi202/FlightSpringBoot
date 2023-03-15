@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8" />
+    <title>Paypal Payment</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <!-- style css -->
+    <link rel="stylesheet" th:href="@{css/style.css}">
+    <!-- Responsive-->
+    <link rel="stylesheet" th:href="@{css/responsive.css}">
+    <!-- fevicon -->
+    <link rel="icon" th:href="@{images/fevicon.png}" type="image/gif" />
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet"th:href="@{css/jquery.mCustomScrollbar.min.css}">
+    <!-- Tweaks for older IEs-->
+    <!-- owl stylesheets -->
+    <link rel="stylesheet" th:href="@{css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{css/owl.theme.default.min.css}">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</head>
+<body>
+<div class="container  mt-5 card"
+     style="background: url('https://i.insider.com/5dc09fe47eece52ee36b4e7c?width=1000&format=jpeg&auto=webp') no-repeat; background-size: cover;padding: 100px 0 100px 200px">
+    <div style="font-weight: 900; font-size: 40px; color: #000099">Paypal Payment</div>
+    <form method="post" th:action="@{/pay}">
+        <div class="mb-3">
+            <span style="font-weight: 800">Cost: </span>
+            <input type="text" th:value="${session.total}" name="price" />
+            <span style="font-weight: 800">$</span>
+        </div>
+        <button type="submit" class="btn " style="background-color: #ee580f; color: white"> Payment with Paypal </button>
+    </form>
+</div>
+
+</body>
+</html>

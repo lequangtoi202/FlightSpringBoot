@@ -130,7 +130,7 @@ public class FlightController {
             e.printStackTrace();
             attributes.addFlashAttribute("failed", "Failed to update product");
         }
-        return "redirect:/airplanes";
+        return "redirect:/flights";
     }
 
     @RequestMapping(value = "/delete-flight/{id}", method = {RequestMethod.PUT, RequestMethod.GET})

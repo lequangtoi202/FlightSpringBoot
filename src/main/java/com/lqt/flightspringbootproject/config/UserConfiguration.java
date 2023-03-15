@@ -63,7 +63,7 @@ public class UserConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/do-login")
-                    .defaultSuccessUrl("/")
+                    .successHandler(authenticationSuccessHandler())
                     .permitAll()
                 .and()
                 .oauth2Login()
@@ -77,7 +77,6 @@ public class UserConfiguration extends WebSecurityConfigurerAdapter {
                         CustomOauth2User oauthUser = (CustomOauth2User) authentication.getPrincipal();
 
                         userService.processOAuthPostLogin(oauthUser.getEmail());
-
                         response.sendRedirect("/");
                     }
                 })
@@ -91,4 +90,9 @@ public class UserConfiguration extends WebSecurityConfigurerAdapter {
     }
     @Autowired
     private CustomOauth2UserService oauth2UserService;
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
 }

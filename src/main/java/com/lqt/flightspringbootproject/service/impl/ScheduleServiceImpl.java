@@ -51,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule update(ScheduleDto scheduleDto) {
         try{
-            SimpleDateFormat fm = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
             Schedule schedule = scheduleRepository.getById(scheduleDto.getId());
             schedule.setDate(fm.parse(scheduleDto.getDate()));
             schedule.setTimeStart(LocalTime.parse(scheduleDto.getTimeStart()));
@@ -61,8 +61,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             schedule.setFlight(scheduleDto.getFlight());
             return scheduleRepository.save(schedule);
         }catch (Exception e){
+            return null;
         }
-        return null;
     }
 
     @Override
